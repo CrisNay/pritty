@@ -1,0 +1,19 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cover" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F7D9E3"/>
+      <stop offset="1" stop-color="#EFC0D2"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#FFFFFF"/>
+  <rect x="96" y="72" width="320" height="368" rx="24" fill="url(#cover)"/>
+  <rect x="96" y="72" width="320" height="368" rx="24" fill="none" stroke="#E39FB8" stroke-width="4"/>
+  <rect x="132" y="52" width="16" height="56" rx="8" fill="#E39FB8"/>
+  <rect x="364" y="52" width="16" height="56" rx="8" fill="#E39FB8"/>
+  <rect x="132" y="150" width="248" height="240" rx="16" fill="#FFFFFF"/>
+  <line x1="160" y1="196" x2="352" y2="196" stroke="#F3D3E0" stroke-width="10" stroke-linecap="round"/>
+  <line x1="160" y1="240" x2="320" y2="240" stroke="#F3D3E0" stroke-width="10" stroke-linecap="round"/>
+  <line x1="160" y1="284" x2="336" y2="284" stroke="#F3D3E0" stroke-width="10" stroke-linecap="round"/>
+  <line x1="160" y1="328" x2="300" y2="328" stroke="#F3D3E0" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="256" cy="150" r="10" fill="#E39FB8"/>
+</svg>

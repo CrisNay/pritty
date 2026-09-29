@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pritty · Vacía tu cabeza</title>
+<link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ONBOARDING -->
+  <section id="onboarding" class="screen active">
+    <div style="text-align:center; margin-bottom:18px;">
+      <img src="assets/icon.svg" alt="Pritty" width="64" height="64">
+      <h1 class="brand" style="color:var(--pink-deep); margin:8px 0 2px;">Pritty</h1>
+      <p class="subtitle" style="margin:0;">No organices tu organización. Cuéntame qué tienes en la cabeza y yo me encargo.</p>
+    </div>
+    <div class="progress-dots" id="obDots"></div>
+
+    <div class="onboard-step active" data-step="0">
+      <h2>¿Cómo te llamas?</h2>
+      <div class="field"><input id="ob-name" type="text" placeholder="Tu nombre"></div>
+      <button class="btn-primary" onclick="Onboarding.next()">Continuar</button>
+    </div>
+
+    <div class="onboard-step" data-step="1">
+      <h2>Tu horario fijo</h2>
+      <p class="subtitle">Clases, extraescolares o cualquier bloque que no se pueda mover. Añade los que necesites.</p>
+      <div id="ob-blocks"></div>
+      <div class="card">
+        <div class="field"><label>Nombre del bloque</label><input id="nb-label" placeholder="Ej: Instituto, Pintura, Gimnasio"></div>
+        <div class="row-2">
+          <div class="field"><label>Inicio</label><input id="nb-start" type="time" value="08:00"></div>
+          <div class="field"><label>Fin</label><input id="nb-end" type="time" value="14:00"></div>
+        </div>
+        <div class="field">
+          <label>Días</label>
+          <div class="chip-row" id="nb-days"></div>
+        </div>
+        <div class="field">
+          <label><input type="checkbox" id="nb-flex" style="width:auto;"> Es posponible si hace falta</label>
+        </div>
+        <button class="btn-ghost" style="width:100%;" onclick="Onboarding.addBlock()">Añadir bloque</button>
+      </div>
+      <button class="btn-primary" onclick="Onboarding.next()">Continuar</button>
+    </div>
+
+    <div class="onboard-step" data-step="2">
+      <h2>Tus objetivos</h2>
+      <p class="subtitle">Cosas que quieres incorporar, con una frecuencia semanal. Ej: "ir al gimnasio", 3 veces.</p>
+      <div id="ob-goals"></div>
+      <div class="card">
+        <div class="field"><label>Objetivo</label><input id="ng-text" placeholder="Ej: Ir al gimnasio"></div>
+        <div class="field"><label>Veces por semana</label><input id="ng-times" type="number" min="1" max="7" value="3"></div>
+        <button class="btn-ghost" style="width:100%;" onclick="Onboarding.addGoal()">Añadir objetivo</button>
+      </div>
+      <button class="btn-primary" onclick="Onboarding.next()">Continuar</button>
+    </div>
+
+    <div class="onboard-step" data-step="3">
+      <h2>Tu rutina</h2>
+      <div class="row-2">
+        <div class="field"><label>Te levantas sobre</label><input id="ob-wake" type="time" value="07:00"></div>
+        <div class="field"><label>Te acuestas sobre</label><input id="ob-sleep" type="time" value="23:00"></div>
+      </div>
+      <div class="field">
+        <label>Hábitos que quieres mantener o incorporar</label>
+        <textarea id="ob-habits" placeholder="Ej: sacar al perro, ordenar el cuarto, journaling..."></textarea>
+      </div>
+      <button class="btn-primary" onclick="Onboarding.next()">Continuar</button>
+    </div>
+
+    <div class="onboard-step" data-step="4">
+      <h2>Cómo estudias y trabajas</h2>
+      <div class="field"><label>Asignaturas o temas que te cuestan más</label><input id="ob-hard" placeholder="Ej: economía, inglés"></div>
+      <div class="field"><label>Asignaturas o temas que te cuestan menos</label><input id="ob-easy" placeholder="Ej: literatura"></div>
+      <div class="field">
+        <label>¿Cuánto tiempo sueles concentrarte seguido?</label>
+        <select id="ob-focus">
+          <option value="20">Unos 20 minutos</option>
+          <option value="30" selected>Unos 30 minutos</option>
+          <option value="45">Unos 45 minutos</option>
+          <option value="60">Una hora o más</option>
+        </select>
+      </div>
+      <div class="field"><label>¿Qué tipo de tareas sueles posponer?</label><input id="ob-procrastinate" placeholder="Ej: cosas administrativas, tareas aburridas"></div>
+      <div class="field"><label>¿Qué te cuesta más empezar?</label><input id="ob-hardstart" placeholder="Ej: tareas largas sin fecha cercana"></div>
+      <button class="btn-primary" onclick="Onboarding.next()">Continuar</button>
+    </div>
+
+    <div class="onboard-step" data-step="5">
+      <h2>¿Cuánto quieres decidir tú?</h2>
+      <p class="subtitle">Puedes cambiarlo cuando quieras desde Ajustes.</p>
+      <button type="button" class="choice-btn" data-val="1" onclick="Onboarding.chooseAutonomy(1)">Que Pritty organice todo y solo me avise</button>
+      <button type="button" class="choice-btn" data-val="2" onclick="Onboarding.chooseAutonomy(2)">Que Pritty proponga y yo confirme</button>
+      <button type="button" class="choice-btn" data-val="3" onclick="Onboarding.chooseAutonomy(3)">Decidir yo el orden, que Pritty solo avise si hay algo urgente</button>
+      <button class="btn-primary" style="margin-top:10px;" onclick="Onboarding.finish()">Empezar a usar Pritty</button>
+    </div>
+  </section>
+
+  <!-- MAIN APP -->
+  <div id="mainApp" style="display:none; flex:1; flex-direction:column; position:relative; min-height:100vh;">
+
+    <div class="topbar">
+      <img src="assets/icon.svg" alt="Pritty">
+      <span class="brand">Pritty</span>
+      <button class="icon-btn" onclick="App.showScreen('screen-settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 000-2l1-1.7-1.7-1-1.7 1a1.7 1.7 0 00-1.7-1L15 9h-2l-.3 1.3a1.7 1.7 0 00-1.7 1l-1.7-1-1.7 1 1 1.7a1.7 1.7 0 000 2l-1 1.7 1.7 1 1.7-1a1.7 1.7 0 001.7 1l.3 1.3h2l.3-1.3a1.7 1.7 0 001.7-1l1.7 1 1.7-1z"/></svg>
+      </button>
+    </div>
+
+    <!-- VACIAR -->
+    <section id="screen-vaciar" class="screen active">
+      <h2 id="vaciar-greeting">Vacía tu cabeza</h2>
+      <p class="subtitle">Escribe todo lo que tienes pendiente, sin orden ni categorías. Yo lo organizo.</p>
+      <textarea id="dump-text" placeholder="Tengo que hacer el texto argumentativo de lengua, estudiar economía para el examen del viernes, sacar al perro..."></textarea>
+      <button class="btn-primary organize-btn" onclick="Vaciar.organize()">Organizar</button>
+      <div id="vaciar-questions"></div>
+    </section>
+
+    <!-- PLAN -->
+    <section id="screen-plan" class="screen">
+      <h2>Tu plan</h2>
+      <div class="tabbar" id="plan-tabs">
+        <button data-tab="ahora" class="active" onclick="Plan.showTab('ahora')">Ahora</button>
+        <button data-tab="hoy" onclick="Plan.showTab('hoy')">Hoy</button>
+        <button data-tab="manana" onclick="Plan.showTab('manana')">Mañana</button>
+        <button data-tab="semana" onclick="Plan.showTab('semana')">Semana</button>
+      </div>
+      <div id="plan-content"></div>
+    </section>
+
+    <!-- RECURSOS -->
+    <section id="screen-recursos" class="screen">
+      <h2>Recursos</h2>
+      <div class="note-banner">Pritty aún no puede conectarse a Moodle, Classroom o tus fotos automáticamente (necesitaría un servidor propio). Por ahora, escribe aquí lo importante y lo tendrá en cuenta.</div>
+      <div class="res-tabs">
+        <button data-rt="notas" class="active" onclick="Recursos.showTab('notas')">Apuntes</button>
+        <button data-rt="fechas" onclick="Recursos.showTab('fechas')">Fechas</button>
+        <button data-rt="horario" onclick="Recursos.showTab('horario')">Horario</button>
+      </div>
+      <div id="recursos-content"></div>
+    </section>
+
+    <!-- INSPIRACIÓN -->
+    <section id="screen-inspiracion" class="screen">
+      <h2>Inspiración</h2>
+      <p class="subtitle">Guarda lo que te ayude. Cuanto más uses esto, mejor se ajusta a ti.</p>
+      <div class="insp-filters" id="insp-filters"></div>
+      <div class="masonry" id="insp-grid"></div>
+    </section>
+
+    <!-- AJUSTES (no está en la barra inferior) -->
+    <section id="screen-settings" class="screen">
+      <h2>Ajustes</h2>
+      <button class="btn-text" style="margin-bottom:14px;" onclick="App.showScreen('screen-vaciar')">‹ Volver</button>
+
+      <div class="settings-section">
+        <h3>Tu información</h3>
+        <div class="field"><label>Nombre</label><input id="st-name" type="text"></div>
+        <div class="row-2">
+          <div class="field"><label>Te levantas</label><input id="st-wake" type="time"></div>
+          <div class="field"><label>Te acuestas</label><input id="st-sleep" type="time"></div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Horario fijo</h3>
+        <div id="st-blocks"></div>
+        <div class="card">
+          <div class="field"><label>Nombre del bloque</label><input id="sb-label" placeholder="Ej: Instituto"></div>
+          <div class="row-2">
+            <div class="field"><label>Inicio</label><input id="sb-start" type="time" value="08:00"></div>
+            <div class="field"><label>Fin</label><input id="sb-end" type="time" value="14:00"></div>
+          </div>
+          <div class="field"><label>Días</label><div class="chip-row" id="sb-days"></div></div>
+          <div class="field"><label><input type="checkbox" id="sb-flex" style="width:auto;"> Es posponible</label></div>
+          <button class="btn-ghost" style="width:100%;" onclick="Settings.addBlock()">Añadir bloque</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Objetivos</h3>
+        <div id="st-goals"></div>
+        <div class="card">
+          <div class="field"><label>Objetivo</label><input id="sg-text" placeholder="Ej: Ir al gimnasio"></div>
+          <div class="field"><label>Veces por semana</label><input id="sg-times" type="number" min="1" max="7" value="3"></div>
+          <button class="btn-ghost" style="width:100%;" onclick="Settings.addGoal()">Añadir objetivo</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Preferencias</h3>
+        <div class="field"><label>Te cuesta más</label><input id="st-hard" type="text"></div>
+        <div class="field"><label>Te cuesta menos</label><input id="st-easy" type="text"></div>
+        <div class="field"><label>Sueles posponer</label><input id="st-procrastinate" type="text"></div>
+      </div>
+
+      <div class="settings-section">
+        <h3>Nivel de autonomía</h3>
+        <button type="button" class="choice-btn" data-val="1" onclick="Settings.chooseAutonomy(1)">Pritty organiza todo</button>
+        <button type="button" class="choice-btn" data-val="2" onclick="Settings.chooseAutonomy(2)">Pritty propone, yo confirmo</button>
+        <button type="button" class="choice-btn" data-val="3" onclick="Settings.chooseAutonomy(3)">Decido yo el orden</button>
+      </div>
+
+      <button class="btn-primary" onclick="Settings.save()">Guardar cambios</button>
+      <div class="card" style="margin-top:16px; border-color:#eee;">
+        <button class="btn-ghost" style="width:100%;" onclick="App.resetAll()">Reiniciar Pritty</button>
+      </div>
+    </section>
+
+    <!-- BOTTOM NAV (4 secciones) -->
+    <nav class="bottomnav">
+      <button class="navbtn active" data-target="screen-vaciar" onclick="App.showScreen('screen-vaciar')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M12 10L6 15M12 10l6 5"/><path d="M4 4h16"/></svg>
+        Vaciar
+      </button>
+      <button class="navbtn" data-target="screen-plan" onclick="App.showScreen('screen-plan')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        Plan
+      </button>
+      <button class="navbtn" data-target="screen-recursos" onclick="App.showScreen('screen-recursos')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l3 3v15H6z"/><path d="M9 10h6M9 14h6"/></svg>
+        Recursos
+      </button>
+      <button class="navbtn" data-target="screen-inspiracion" onclick="App.showScreen('screen-inspiracion')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-9.3-8.8C1 8.5 2.8 5 6.4 5c2 0 3.3 1 3.6 2 .3-1 1.6-2 3.6-2 3.6 0 5.4 3.5 3.7 7.2C19 16.5 12 21 12 21z"/></svg>
+        Inspiración
+      </button>
+    </nav>
+
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
